@@ -58,8 +58,8 @@ Can be used multiple times to add multiple items.
 
 Starts all the items; returns the monitor itself.
 
-### Stop
+### Close
 
-`monitor.stop(done)`
+`monitor.close(done)`
 
-Stops all the items; returns the monitor itself.
+Closes (stops) all the items; returns the monitor itself.
