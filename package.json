@@ -24,13 +24,13 @@
   },
   "homepage": "https://github.com/devo-ps/carcass-monitor",
   "dependencies": {
-    "carcass": ">=0.8.0",
     "debug": "*",
     "forever-monitor": "1.x",
     "highland": "1.x",
     "highland-array": "0.x"
   },
   "devDependencies": {
+    "carcass": "latest",
     "gulp": "latest",
     "gulp-coffee": "latest",
     "gulp-coffeelint": "latest",
@@ -38,7 +38,6 @@
     "gulp-mocha": "latest",
     "gulp-util": "latest",
     "jshint-stylish": "latest",
-    "mocha": "latest",
     "should": "latest"
   },
   "scripts": {}

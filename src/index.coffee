@@ -13,8 +13,19 @@ module.exports = class Monitor
 
 carcass.mixable(Monitor)
 Monitor::mixin(carcass.proto.uid)
-Monitor::mixin(carcass.proto.stack)
 
+###*
+ * A stack of items that can be used by startOne().
+ *
+ * @type {Function}
+###
+Monitor::stack = carcass.helpers.stacker('_stack')
+
+###*
+ * Initializer.
+ *
+ * @private
+###
 Monitor::initialize = (options) ->
     @id(options)
     debug('initializing monitor %s.', @id())

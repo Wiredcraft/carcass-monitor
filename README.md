@@ -2,6 +2,8 @@
 
 A simple wrap of [forever-monitor](https://github.com/nodejitsu/forever-monitor), in Carcass style.
 
+Requires [Carcass](https://github.com/devo-ps/carcass) >= 0.9.0; you need to manually include in your dependencies.
+
 This is only meant to be used in tests where you need to start and stop some scripts easily. For production, use [forever](https://github.com/nodejitsu/forever) or equivalent.
 
 ## Quick Example

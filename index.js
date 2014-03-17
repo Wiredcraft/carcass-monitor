@@ -28,7 +28,21 @@ carcass.mixable(Monitor);
 
 Monitor.prototype.mixin(carcass.proto.uid);
 
-Monitor.prototype.mixin(carcass.proto.stack);
+
+/**
+ * A stack of items that can be used by startOne().
+ *
+ * @type {Function}
+ */
+
+Monitor.prototype.stack = carcass.helpers.stacker('_stack');
+
+
+/**
+ * Initializer.
+ *
+ * @private
+ */
 
 Monitor.prototype.initialize = function(options) {
   this.id(options);
