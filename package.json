@@ -1,6 +1,6 @@
 {
   "name": "carcass-monitor",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "(Node.js) A simple wrap of forever-monitor, in Carcass style.",
   "author": {
     "name": "devo.ps",
