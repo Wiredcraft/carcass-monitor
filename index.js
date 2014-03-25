@@ -16,82 +16,79 @@ ForeverMonitor = require('forever-monitor').Monitor;
  */
 
 module.exports = Monitor = (function() {
-  function Monitor() {
-    this.initialize.apply(this, arguments);
+
+  /**
+   * Constructor.
+   */
+  function Monitor(options) {
+    this.id(options);
+    debug('initializing monitor %s.', this.id());
+    this.children = [];
   }
+
+
+  /**
+   * A stack of items that can be used by startOne().
+   *
+   * @type {Function}
+   */
+
+  Monitor.prototype.stack = carcass.helpers.stacker('_stack');
+
+
+  /**
+   * Start the monitor(s).
+   */
+
+  Monitor.prototype.start = function(done) {
+    var cb, returned, _done;
+    if (done == null) {
+      done = function() {};
+    }
+    cb = _.wrapCallback(startOne);
+    returned = false;
+    _done = function() {
+      if (returned) {
+        return;
+      }
+      returned = true;
+      return done.apply(null, arguments);
+    };
+    _(this.stack()).flatMap(cb).stopOnError(_done).once('end', _done).each((function(_this) {
+      return function(child) {
+        return _this.children.push(child);
+      };
+    })(this));
+    return this;
+  };
+
+
+  /**
+   * Close the monitor(s).
+   */
+
+  Monitor.prototype.close = function(done) {
+    var cb;
+    if (done == null) {
+      done = function() {};
+    }
+    cb = _.wrapCallback(closeOne);
+    this.children.shiftToStream().flatMap(cb).errors(debug).once('end', done).resume();
+    return this;
+  };
 
   return Monitor;
 
 })();
 
+
+/**
+ * Mixins.
+ */
+
 carcass.mixable(Monitor);
 
 Monitor.prototype.mixin(carcass.proto.uid);
-
-
-/**
- * A stack of items that can be used by startOne().
- *
- * @type {Function}
- */
-
-Monitor.prototype.stack = carcass.helpers.stacker('_stack');
-
-
-/**
- * Initializer.
- *
- * @private
- */
-
-Monitor.prototype.initialize = function(options) {
-  this.id(options);
-  debug('initializing monitor %s.', this.id());
-  this.children = [];
-  return this;
-};
-
-
-/**
- * Start the monitor(s).
- */
-
-Monitor.prototype.start = function(done) {
-  var cb, returned, _done;
-  if (done == null) {
-    done = function() {};
-  }
-  cb = _.wrapCallback(startOne);
-  returned = false;
-  _done = function() {
-    if (returned) {
-      return;
-    }
-    returned = true;
-    return done.apply(null, arguments);
-  };
-  _(this.stack()).flatMap(cb).stopOnError(_done).once('end', _done).each((function(_this) {
-    return function(child) {
-      return _this.children.push(child);
-    };
-  })(this));
-  return this;
-};
-
-
-/**
- * Close the monitor(s).
- */
-
-Monitor.prototype.close = function(done) {
-  var cb;
-  if (done == null) {
-    done = function() {};
-  }
-  cb = _.wrapCallback(closeOne);
-  this.children.shiftToStream().flatMap(cb).errors(debug).once('end', done).resume();
-  return this;
-};
 
 
 /**

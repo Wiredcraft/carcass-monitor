@@ -9,53 +9,49 @@ ForeverMonitor = require('forever-monitor').Monitor
  * Monitor.
 ###
 module.exports = class Monitor
-    constructor: -> @initialize(arguments...)
+    ###*
+     * Constructor.
+    ###
+    constructor: (options) ->
+        @id(options)
+        debug('initializing the %s monitor.', @id())
+        @children = []
 
+    ###*
+     * A stack of items that can be used by startOne().
+     *
+     * @type {Function}
+    ###
+    stack: carcass.helpers.stacker('_stack')
+
+    ###*
+     * Start the monitor(s).
+    ###
+    start: (done = ->) ->
+        cb = _.wrapCallback(startOne)
+        returned = false
+        _done = ->
+            return if returned
+            returned = true
+            done(arguments...)
+        _(@stack()).flatMap(cb).stopOnError(_done).once('end', _done).each((child) =>
+            @children.push(child)
+        )
+        return @
+
+    ###*
+     * Close the monitor(s).
+    ###
+    close: (done = ->) ->
+        cb = _.wrapCallback(closeOne)
+        @children.shiftToStream().flatMap(cb).errors(debug).once('end', done).resume()
+        return @
+
+###*
+ * Mixins.
+###
 carcass.mixable(Monitor)
 Monitor::mixin(carcass.proto.uid)
-
-###*
- * A stack of items that can be used by startOne().
- *
- * @type {Function}
-###
-Monitor::stack = carcass.helpers.stacker('_stack')
-
-###*
- * Initializer.
- *
- * @private
-###
-Monitor::initialize = (options) ->
-    @id(options)
-    debug('initializing monitor %s.', @id())
-    @children = []
-    return @
-
-###*
- * Start the monitor(s).
-###
-Monitor::start = (done) ->
-    done ?= ->
-    cb = _.wrapCallback(startOne)
-    returned = false
-    _done = ->
-        return if returned
-        returned = true
-        done(arguments...)
-    _(@stack()).flatMap(cb).stopOnError(_done).once('end', _done).each((child) =>
-        @children.push(child)
-    )
-    return @
-
-###*
- * Close the monitor(s).
-###
-Monitor::close = (done) ->
-    done ?= ->
-    cb = _.wrapCallback(closeOne)
-    @children.shiftToStream().flatMap(cb).errors(debug).once('end', done).resume()
-    return @
 
 ###*
  * Start one item.
