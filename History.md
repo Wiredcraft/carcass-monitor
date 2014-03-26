@@ -1,4 +1,10 @@
 
+0.2.0 / 2014-03-26
+==================
+
+ * Updated carcass; also moved it from devDependencies to dependencies.
+ * Changed classes to be more coffee style.
+
 0.1.0 / 2014-03-17
 ==================
 
