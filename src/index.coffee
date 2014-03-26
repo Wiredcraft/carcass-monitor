@@ -1,8 +1,7 @@
 debug = require('debug')('carcass:monitor')
 
-_ = require('highland')
-require('highland-array')
 carcass = require('carcass')
+_ = carcass.highland
 ForeverMonitor = require('forever-monitor').Monitor
 
 ###*

@@ -2,11 +2,9 @@ var ForeverMonitor, Monitor, carcass, closeOne, debug, startOne, _;
 
 debug = require('debug')('carcass:monitor');
 
-_ = require('highland');
-
-require('highland-array');
-
 carcass = require('carcass');
+
+_ = carcass.highland;
 
 ForeverMonitor = require('forever-monitor').Monitor;
 
@@ -22,7 +20,7 @@ module.exports = Monitor = (function() {
    */
   function Monitor(options) {
     this.id(options);
-    debug('initializing monitor %s.', this.id());
+    debug('initializing the %s monitor.', this.id());
     this.children = [];
   }
 
