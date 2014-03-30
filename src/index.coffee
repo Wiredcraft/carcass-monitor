@@ -3,6 +3,7 @@ debug = require('debug')('carcass:monitor')
 carcass = require('carcass')
 _ = carcass.highland
 ForeverMonitor = require('forever-monitor').Monitor
+once = require('once')
 
 ###*
  * Monitor.
@@ -27,13 +28,9 @@ module.exports = class Monitor
      * Start the monitor(s).
     ###
     start: (done = ->) ->
+        done = once(done)
         cb = _.wrapCallback(startOne)
-        returned = false
-        _done = ->
-            return if returned
-            returned = true
-            done(arguments...)
-        _(@stack()).flatMap(cb).stopOnError(_done).once('end', _done).each((child) =>
+        _(@stack()).flatMap(cb).stopOnError(done).once('end', done).each((child) =>
             @children.push(child)
         )
         return @

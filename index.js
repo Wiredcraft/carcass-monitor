@@ -1,4 +1,4 @@
-var ForeverMonitor, Monitor, carcass, closeOne, debug, startOne, _;
+var ForeverMonitor, Monitor, carcass, closeOne, debug, once, startOne, _;
 
 debug = require('debug')('carcass:monitor');
 
@@ -7,6 +7,8 @@ carcass = require('carcass');
 _ = carcass.highland;
 
 ForeverMonitor = require('forever-monitor').Monitor;
+
+once = require('once');
 
 
 /**
@@ -39,20 +41,13 @@ module.exports = Monitor = (function() {
    */
 
   Monitor.prototype.start = function(done) {
-    var cb, returned, _done;
+    var cb;
     if (done == null) {
       done = function() {};
     }
+    done = once(done);
     cb = _.wrapCallback(startOne);
-    returned = false;
-    _done = function() {
-      if (returned) {
-        return;
-      }
-      returned = true;
-      return done.apply(null, arguments);
-    };
-    _(this.stack()).flatMap(cb).stopOnError(_done).once('end', _done).each((function(_this) {
+    _(this.stack()).flatMap(cb).stopOnError(done).once('end', done).each((function(_this) {
       return function(child) {
         return _this.children.push(child);
       };
