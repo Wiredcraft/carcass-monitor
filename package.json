@@ -3,11 +3,13 @@
   "version": "0.2.0",
   "description": "(Node.js) A simple wrap of forever-monitor, in Carcass style.",
   "author": {
-    "name": "devo.ps",
-    "email": "info@devo.ps",
-    "url": "https://github.com/devo-ps"
+    "name": "Wiredcraft",
+    "email": "info@wiredcraft.com",
+    "url": "http://wiredcraft.com"
   },
-  "contributors": [],
+  "contributors": [
+    "Makara Wang"
+  ],
   "keywords": [
     "carcass",
     "monitor",
@@ -17,12 +19,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/devo-ps/carcass-monitor.git"
+    "url": "https://github.com/Wiredcraft/carcass-monitor.git"
   },
   "bugs": {
-    "url": "https://github.com/devo-ps/carcass-monitor/issues"
+    "url": "https://github.com/Wiredcraft/carcass-monitor/issues"
   },
-  "homepage": "https://github.com/devo-ps/carcass-monitor",
+  "homepage": "https://github.com/Wiredcraft/carcass-monitor",
   "dependencies": {
     "carcass": "~0.10.1",
     "debug": "*",
