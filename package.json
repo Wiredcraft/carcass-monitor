@@ -1,6 +1,6 @@
 {
   "name": "carcass-monitor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "(Node.js) A simple wrap of forever-monitor, in Carcass style.",
   "author": {
     "name": "Wiredcraft",
@@ -26,10 +26,10 @@
   },
   "homepage": "https://github.com/Wiredcraft/carcass-monitor",
   "dependencies": {
-    "carcass": "~0.10.1",
+    "carcass": ">=0.9.0",
     "debug": "*",
     "forever-monitor": "1.x",
-    "once": "~1.3.0"
+    "once": ">=1.3.0"
   },
   "devDependencies": {
     "gulp": "latest",
