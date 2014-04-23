@@ -1,9 +1,9 @@
 debug = require('debug')('carcass:monitor')
 
 carcass = require('carcass')
-_ = carcass.highland
+highland = carcass.highland
 ForeverMonitor = require('forever-monitor').Monitor
-once = require('once')
+_ = require('lodash')
 
 ###*
  * Monitor.
@@ -28,9 +28,9 @@ module.exports = class Monitor
      * Start the monitor(s).
     ###
     start: (done = ->) ->
-        done = once(done)
-        cb = _.wrapCallback(startOne)
-        _(@stack()).flatMap(cb).stopOnError(done).once('end', done).each((child) =>
+        done = _.once(done)
+        cb = highland.wrapCallback(startOne)
+        highland(@stack()).flatMap(cb).stopOnError(done).once('end', done).each((child) =>
             @children.push(child)
         )
         return @
@@ -39,7 +39,7 @@ module.exports = class Monitor
      * Close the monitor(s).
     ###
     close: (done = ->) ->
-        cb = _.wrapCallback(closeOne)
+        cb = highland.wrapCallback(closeOne)
         @children.shiftToStream().flatMap(cb).errors(debug).once('end', done).resume()
         return @
 
@@ -55,7 +55,7 @@ Monitor::mixin(carcass.proto.uid)
 startOne = (item, done) ->
     # TODO: inherit env?
     # debug('process.env', process.env)
-    child = new ForeverMonitor(item.script, carcass.Object.extend({
+    child = new ForeverMonitor(item.script, _.merge({
         max: 1,
         fork: true
     }, item))

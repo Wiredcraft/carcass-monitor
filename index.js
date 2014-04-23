@@ -1,14 +1,14 @@
-var ForeverMonitor, Monitor, carcass, closeOne, debug, once, startOne, _;
+var ForeverMonitor, Monitor, carcass, closeOne, debug, highland, startOne, _;
 
 debug = require('debug')('carcass:monitor');
 
 carcass = require('carcass');
 
-_ = carcass.highland;
+highland = carcass.highland;
 
 ForeverMonitor = require('forever-monitor').Monitor;
 
-once = require('once');
+_ = require('lodash');
 
 
 /**
@@ -45,9 +45,9 @@ module.exports = Monitor = (function() {
     if (done == null) {
       done = function() {};
     }
-    done = once(done);
-    cb = _.wrapCallback(startOne);
-    _(this.stack()).flatMap(cb).stopOnError(done).once('end', done).each((function(_this) {
+    done = _.once(done);
+    cb = highland.wrapCallback(startOne);
+    highland(this.stack()).flatMap(cb).stopOnError(done).once('end', done).each((function(_this) {
       return function(child) {
         return _this.children.push(child);
       };
@@ -65,7 +65,7 @@ module.exports = Monitor = (function() {
     if (done == null) {
       done = function() {};
     }
-    cb = _.wrapCallback(closeOne);
+    cb = highland.wrapCallback(closeOne);
     this.children.shiftToStream().flatMap(cb).errors(debug).once('end', done).resume();
     return this;
   };
@@ -90,7 +90,7 @@ Monitor.prototype.mixin(carcass.proto.uid);
 
 startOne = function(item, done) {
   var child, onMsg;
-  child = new ForeverMonitor(item.script, carcass.Object.extend({
+  child = new ForeverMonitor(item.script, _.merge({
     max: 1,
     fork: true
   }, item));
